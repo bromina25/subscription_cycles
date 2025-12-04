@@ -1,5 +1,6 @@
-package com.lufthansa.subscriptions.util;
+package com.lufthansa.subscriptions.units;
 
+import com.lufthansa.subscriptions.util.DisplayHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 

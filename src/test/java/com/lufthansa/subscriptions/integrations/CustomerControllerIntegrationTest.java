@@ -1,4 +1,4 @@
-package com.lufthansa.subscriptions.controller;
+package com.lufthansa.subscriptions.integrations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lufthansa.subscriptions.constant.enums.ActivationState;

@@ -27,37 +27,8 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @ControllerAdvice
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ValidationAdvice {
 
- /*   @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
-
-        BindingResult result = ex.getBindingResult();
-        List<FieldError> fieldErrors = result.getFieldErrors();
-        String errorMessage = fieldErrors.get(0).getDefaultMessage();
-
-        return ResponseEntity.badRequest().body(new ResponseError(errorMessage));
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<?> httpMessageNotReadable(HttpMessageNotReadableException ex) {
-        log.error(ex.toString());
-        return ResponseEntity.badRequest().body(new ResponseError(ex.getMessage()));
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException ex) {
-        log.error(ex.toString());
-        return ResponseEntity.badRequest().body(new ResponseError(ex.getMessage()));
-    }
-
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<?> missingServletRequestParameterException(MissingServletRequestParameterException ex) {
-        log.error(ex.toString());
-        return ResponseEntity.badRequest().body(new ResponseError(ex.getMessage()));
-    }
-*/
     @ExceptionHandler({AccessDeniedException.class, AuthorizationDeniedException.class})
     public ResponseEntity<?> accessDeniedException(Exception ex) {
         log.error(ex.toString());
