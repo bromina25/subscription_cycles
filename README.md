@@ -24,7 +24,7 @@
 
 ### 1.  REST API UI
 
-- For local dev profile, you can find the swagger UI with all endpoints in: http://localhost:8080/swagger-ui
+- For local dev profile, you can find the swagger UI with all endpoints in: http://localhost:8080/swagger-ui/index.html
 
 ### 2.  REST API definition
 
