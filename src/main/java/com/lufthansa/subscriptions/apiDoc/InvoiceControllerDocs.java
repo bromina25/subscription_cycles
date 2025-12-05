@@ -32,4 +32,22 @@ public class InvoiceControllerDocs {
            """)
     public @interface RegisterInvoicePaymentDoc {
     }
+
+    @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Operation(
+            summary = "Get all invoices.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Invoices retrieved successfully!"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error!",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ResponseError.class))
+                    )
+            },    description = """
+                Retrieves all invoices in the system. The list is paginated and supports
+                filter by customerId and status. Default order by id descending.
+                """
+    )
+    public @interface GetInvoicesDoc {
+    }
 }

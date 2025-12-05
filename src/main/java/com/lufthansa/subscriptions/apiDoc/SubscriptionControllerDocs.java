@@ -36,20 +36,18 @@ public class SubscriptionControllerDocs {
     @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @Operation(
-            summary = "Get subscription details.",
+            summary = "Get subscription.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Details of subscription retrieved successfully!"),
-                    @ApiResponse(responseCode = "404", description = "Id of subscription not found!",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ResponseError.class))
-                    ), @ApiResponse(responseCode = "500", description = "Internal server error!",
+                    @ApiResponse(responseCode = "200", description = "Subscriptions retrieved successfully!"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error!",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ResponseError.class))
             )
             },    description = """
-                Retrieve details of subscription by subscription id.
+                Retrieves all subscriptions in the system. The list is paginated and supports
+                filter by name and default order by id descending.
                 """
     )
-    public @interface GetSubscriptionDetailsDoc {
+    public @interface GetSubscriptionsDoc {
     }
 }

@@ -7,7 +7,7 @@ import com.lufthansa.subscriptions.dto.general.EntityIdDto;
 import com.lufthansa.subscriptions.entity.Customer;
 import com.lufthansa.subscriptions.apiDoc.CustomerControllerDocs;
 import com.lufthansa.subscriptions.constant.RestConstants;
-import com.lufthansa.subscriptions.service.CustomerService;
+import com.lufthansa.subscriptions.service.interfaces.ICustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +21,19 @@ import static com.lufthansa.subscriptions.constant.RestConstants.*;
 @RequestMapping(RestConstants.CustomerController.BASE_PATH)
 public class CustomerController {
 
-    private final CustomerService customerService;
+    private final ICustomerService iCustomerService;
 
     @PostMapping
     @CustomerControllerDocs.CreateCustomerDoc
     public ResponseEntity<EntityIdDto> createCustomer(@Validated @RequestBody CustomerDto customerDto) {
-        Customer customer = customerService.createCustomer(customerDto);
+        Customer customer = iCustomerService.createCustomer(customerDto);
         return new ResponseEntity<>(EntityIdDto.of(customer.getId()), HttpStatus.CREATED);
     }
 
     @GetMapping(RestConstants.ID_PATH)
     @CustomerControllerDocs.GetCustomerDetailsDoc
     public CustomerDetailsDto getCustomersDetails(@PathVariable(name = RestConstants.ID) Long id) {
-        return customerService.getCustomersDetails(id);
+        return iCustomerService.getCustomersDetails(id);
     }
 
     @GetMapping(RestConstants.CustomerController.CUSTOMER_INVOICE)
@@ -41,6 +41,6 @@ public class CustomerController {
     public CustomerInvoiceDto getCustomerInvoices(@PathVariable(name = ID) Long customerId,
                                                   @RequestParam(value = PAGE, defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                                   @RequestParam(value = SIZE, defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return customerService.getCustomerInvoices(customerId, page, size);
+        return iCustomerService.getCustomerInvoices(customerId, page, size);
     }
 }

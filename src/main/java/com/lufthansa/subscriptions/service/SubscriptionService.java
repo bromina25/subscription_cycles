@@ -1,23 +1,122 @@
 package com.lufthansa.subscriptions.service;
 
+import com.lufthansa.subscriptions.constant.enums.ActivationState;
 import com.lufthansa.subscriptions.constant.enums.BillingPeriod;
 import com.lufthansa.subscriptions.constant.enums.SubscriptionStatus;
-import com.lufthansa.subscriptions.dto.subscription.SubscriptionDetailsDto;
 import com.lufthansa.subscriptions.dto.subscription.SubscriptionDto;
+import com.lufthansa.subscriptions.dto.subscription.SubscriptionDetailsDto;
+import com.lufthansa.subscriptions.entity.Customer;
 import com.lufthansa.subscriptions.entity.Subscription;
+import com.lufthansa.subscriptions.entity.SubscriptionPlan;
+import com.lufthansa.subscriptions.exception.BadRequestException;
+import com.lufthansa.subscriptions.repository.SubscriptionRepository;
+import com.lufthansa.subscriptions.service.interfaces.ICustomerService;
+import com.lufthansa.subscriptions.service.interfaces.IInvoiceService;
+import com.lufthansa.subscriptions.service.interfaces.ISubscriptionPlanService;
+import com.lufthansa.subscriptions.service.interfaces.ISubscriptionService;
+import com.lufthansa.subscriptions.util.JsonUtil;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface SubscriptionService {
+@Service
+public class SubscriptionService extends BaseService<Subscription> implements ISubscriptionService {
 
-    Subscription createSubscription(SubscriptionDto subscriptionDto);
+    private final SubscriptionRepository subscriptionRepository;
+    private final ICustomerService iCustomerService;
+    private final ISubscriptionPlanService iSubscriptionPlanService;
+    private final IInvoiceService iInvoiceService;
 
-    SubscriptionDetailsDto getSubscriptionDetails(Long id);
+    public SubscriptionService(SubscriptionRepository subscriptionRepository, ICustomerService iCustomerService,
+                               SubscriptionPlanService iSubscriptionPlanService, IInvoiceService iInvoiceService) {
+        super(subscriptionRepository);
+        this.subscriptionRepository = subscriptionRepository;
+        this.iCustomerService = iCustomerService;
+        this.iSubscriptionPlanService = iSubscriptionPlanService;
+        this.iInvoiceService = iInvoiceService;
+    }
 
-    List<Subscription> findByStatusAndCurrentPeriodEndBefore(SubscriptionStatus status, LocalDate date);
+    @Override
+    public List<Subscription> findByStatusAndCurrentPeriodEndBefore(SubscriptionStatus status, LocalDate date) {
+        return subscriptionRepository.findByStatusAndCurrentPeriodEndBefore(status, date);
+    }
 
-    LocalDate calculateCurrentPeriodEnd(LocalDate startDate, BillingPeriod billingPeriod);
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public Subscription createSubscription(SubscriptionDto subscriptionDto) {
 
-    Subscription save(Subscription subscription);
+        Customer customer = iCustomerService.findById(subscriptionDto.getCustomer().getId(),
+                Customer.class.getSimpleName());
+
+        SubscriptionPlan plan = iSubscriptionPlanService.findById(subscriptionDto.getPlan().getId(),
+                SubscriptionPlan.class.getSimpleName());
+
+        validateSubscription(customer, plan);
+        Subscription subscription = save(buildSubscription(customer, plan));
+        iInvoiceService.generateInvoice(subscription);
+        return subscription;
+    }
+
+    private void validateSubscription(Customer customer, SubscriptionPlan subscriptionPlan) {
+        validateCustomerActive(customer);
+        validatePlanActive(subscriptionPlan);
+        validateNoOtherActiveSubscription(customer, subscriptionPlan);
+    }
+
+    private void validateCustomerActive(Customer customer) {
+        if (customer.getActivationState() == ActivationState.INACTIVE) {
+            throw new BadRequestException(
+                    String.format("Customer %s %s is inactive! Please choose another one.",
+                            customer.getName(), customer.getSurname())
+            );
+        }
+    }
+
+    private void validatePlanActive(SubscriptionPlan subscriptionPlan) {
+        if (subscriptionPlan.getActivationState() == ActivationState.INACTIVE) {
+            throw new BadRequestException(
+                    String.format("Plan '%s' is inactive! Please choose another one.", subscriptionPlan.getName())
+            );
+        }
+    }
+
+    private void validateNoOtherActiveSubscription(Customer customer, SubscriptionPlan subscriptionPlan) {
+        boolean exists = subscriptionRepository.existsOtherActiveSubscription(
+                customer.getId(), subscriptionPlan.getId());
+
+        if (exists) {
+            throw new BadRequestException(
+                    String.format("Customer %s %s already has an active subscription for the plan '%s'.",
+                            customer.getName(), customer.getSurname(), subscriptionPlan.getName())
+            );
+        }
+    }
+
+    private Subscription buildSubscription(Customer customer, SubscriptionPlan plan) {
+        LocalDate today = LocalDate.now();
+        return Subscription.builder()
+                .customer(customer)
+                .plan(plan)
+                .startDate(today)
+                .status(SubscriptionStatus.ACTIVE)
+                .currentPeriodStart(today)
+                .currentPeriodEnd(calculateCurrentPeriodEnd(today, plan.getBillingPeriod()))
+                .build();
+    }
+
+    @Override
+    public LocalDate calculateCurrentPeriodEnd(LocalDate startDate, BillingPeriod billingPeriod) {
+        return switch (billingPeriod) {
+            case MONTHLY -> startDate.plusMonths(1);
+            case YEARLY -> startDate.plusYears(1);
+        };
+    }
+
+    @Override
+    public SubscriptionDetailsDto getSubscriptionDetails(Long id) {
+        Subscription subscription = findById(id, Subscription.class.getSimpleName());
+        return JsonUtil.map(subscription, SubscriptionDetailsDto.class);
+    }
 }

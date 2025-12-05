@@ -7,7 +7,7 @@ import com.lufthansa.subscriptions.dto.subscriptionPlan.SubscriptionPlanDto;
 import com.lufthansa.subscriptions.entity.SubscriptionPlan;
 import com.lufthansa.subscriptions.apiDoc.SubscriptionControllerDocs;
 import com.lufthansa.subscriptions.constant.RestConstants;
-import com.lufthansa.subscriptions.service.SubscriptionPlanService;
+import com.lufthansa.subscriptions.service.interfaces.ISubscriptionPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,21 +23,21 @@ import static com.lufthansa.subscriptions.constant.RestConstants.DEFAULT_PAGE_SI
 @RequestMapping(RestConstants.SubscriptionPlanController.BASE_PATH)
 public class SubscriptionPlanController {
 
-    private final SubscriptionPlanService subscriptionPlanService;
+    private final ISubscriptionPlanService iSubscriptionPlanService;
 
     @PostMapping
     @SubscriptionControllerDocs.CreateSubscriptionDoc
     public ResponseEntity<EntityIdDto> createSubscriptionPlan(@Validated @RequestBody SubscriptionPlanDto subscriptionPlanDto) {
-        SubscriptionPlan subscriptionPlan = subscriptionPlanService.createSubscriptionPlan(subscriptionPlanDto);
+        SubscriptionPlan subscriptionPlan = iSubscriptionPlanService.createSubscriptionPlan(subscriptionPlanDto);
         return new ResponseEntity<>(EntityIdDto.of(subscriptionPlan.getId()), HttpStatus.CREATED);
     }
 
     @GetMapping
-    @SubscriptionControllerDocs.GetSubscriptionDetailsDoc
+    @SubscriptionControllerDocs.GetSubscriptionsDoc
     public ResponseEntity<CustomPage<SubscriptionPlanDetailsDto>> getSubscriptionPlan(@RequestParam(required = false) String name,
                                                                                       @RequestParam(value = PAGE, defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                                                                       @RequestParam(value = SIZE, defaultValue = DEFAULT_PAGE_SIZE) int size){
-        Page<SubscriptionPlanDetailsDto> subscriptionPlan = subscriptionPlanService.getSubscriptionPlan(name, page, size);
+        Page<SubscriptionPlanDetailsDto> subscriptionPlan = iSubscriptionPlanService.getSubscriptionPlan(name, page, size);
         return ResponseEntity.ok(new CustomPage<>(subscriptionPlan));
     }
 }

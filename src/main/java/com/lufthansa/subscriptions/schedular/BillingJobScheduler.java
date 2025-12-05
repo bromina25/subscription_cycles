@@ -1,6 +1,6 @@
 package com.lufthansa.subscriptions.schedular;
 
-import com.lufthansa.subscriptions.service.BillingJobService;
+import com.lufthansa.subscriptions.service.interfaces.IBillingJobService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class BillingJobScheduler {
 
-    private final BillingJobService billingJobService;
+    private final IBillingJobService billingJobService;
 
     @Scheduled(cron = "0 0 0 * * ?")  // runs every day at 00:00
     public void runBillingCycleJob() {

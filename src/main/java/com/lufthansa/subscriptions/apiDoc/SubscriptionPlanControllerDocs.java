@@ -33,7 +33,7 @@ public class SubscriptionPlanControllerDocs {
     @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @Operation(
-            summary = "Get subscription plans with optional filters. Authorized roles: ADMIN.",
+            summary = "Get subscription plans with optional filters.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of subscription plans retrieved successfully!"),
                     @ApiResponse(responseCode = "400", description = "Invalid filter parameters!",
