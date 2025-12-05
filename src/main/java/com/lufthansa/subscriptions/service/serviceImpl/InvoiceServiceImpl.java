@@ -9,7 +9,6 @@ import com.lufthansa.subscriptions.entity.Subscription;
 import com.lufthansa.subscriptions.entity.SubscriptionPlan;
 import com.lufthansa.subscriptions.exception.BadRequestException;
 import com.lufthansa.subscriptions.repository.InvoiceRepository;
-import com.lufthansa.subscriptions.service.BaseService;
 import com.lufthansa.subscriptions.service.InvoiceService;
 import com.lufthansa.subscriptions.service.PaymentService;
 import com.lufthansa.subscriptions.util.DisplayHelper;

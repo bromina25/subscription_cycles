@@ -9,7 +9,6 @@ import com.lufthansa.subscriptions.dto.invoice.InvoiceDto;
 import com.lufthansa.subscriptions.entity.Customer;
 import com.lufthansa.subscriptions.entity.Invoice;
 import com.lufthansa.subscriptions.repository.CustomerRepository;
-import com.lufthansa.subscriptions.service.BaseService;
 import com.lufthansa.subscriptions.service.CustomerService;
 import com.lufthansa.subscriptions.service.InvoiceService;
 import com.lufthansa.subscriptions.util.JsonUtil;

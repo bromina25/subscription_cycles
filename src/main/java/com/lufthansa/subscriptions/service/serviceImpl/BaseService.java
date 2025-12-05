@@ -1,4 +1,4 @@
-package com.lufthansa.subscriptions.service;
+package com.lufthansa.subscriptions.service.serviceImpl;
 
 import com.lufthansa.subscriptions.exception.NotFoundException;
 import com.lufthansa.subscriptions.repository.BaseRepository;

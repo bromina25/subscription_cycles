@@ -4,7 +4,6 @@ import com.lufthansa.subscriptions.dto.payment.PaymentRegistrationDto;
 import com.lufthansa.subscriptions.entity.Invoice;
 import com.lufthansa.subscriptions.entity.Payment;
 import com.lufthansa.subscriptions.repository.PaymentRepository;
-import com.lufthansa.subscriptions.service.BaseService;
 import com.lufthansa.subscriptions.service.PaymentService;
 import org.springframework.stereotype.Service;
 

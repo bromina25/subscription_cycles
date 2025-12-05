@@ -5,7 +5,6 @@ import com.lufthansa.subscriptions.dto.subscriptionPlan.SubscriptionPlanDetailsD
 import com.lufthansa.subscriptions.dto.subscriptionPlan.SubscriptionPlanDto;
 import com.lufthansa.subscriptions.entity.SubscriptionPlan;
 import com.lufthansa.subscriptions.repository.SubscriptionPlanRepository;
-import com.lufthansa.subscriptions.service.BaseService;
 import com.lufthansa.subscriptions.service.SubscriptionPlanService;
 import com.lufthansa.subscriptions.util.JsonUtil;
 import org.springframework.data.domain.Page;
