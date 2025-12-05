@@ -43,7 +43,6 @@ class CustomerControllerIntegrationTest {
         // Cleanup after tests if needed
     }
 
-
     @Test
     @DisplayName("Should retrieve customer details successfully")
     void testGetCustomerDetails_Success() throws Exception {

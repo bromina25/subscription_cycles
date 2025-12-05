@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-
 import static com.lufthansa.subscriptions.constant.RestConstants.*;
 import static com.lufthansa.subscriptions.constant.RestConstants.DEFAULT_PAGE_SIZE;
 import static com.lufthansa.subscriptions.constant.RestConstants.SIZE;
@@ -40,11 +38,9 @@ public class InvoiceController {
     @GetMapping(RestConstants.InvoiceController.INVOICE_ADMIN)
     public ResponseEntity<CustomPage<InvoiceDto>> getInvoices(@RequestParam(required = false) Long customerId,
                                                               @RequestParam(required = false) InvoiceStatus status,
-                                                              @RequestParam(required = false) LocalDate dateFrom,
-                                                              @RequestParam(required = false) LocalDate dateTo,
                                                               @RequestParam(value = PAGE, defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                                              @RequestParam(value = SIZE, defaultValue = DEFAULT_PAGE_SIZE) int size){
-        Page<InvoiceDto> invoice = invoiceService.getInvoices(customerId, status, dateFrom, dateTo, page, size);
-        return ResponseEntity.ok(new CustomPage<>(invoice));
+                                                              @RequestParam(value = SIZE, defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        Page<InvoiceDto> invoices = invoiceService.getInvoices(customerId, status, page, size);
+        return ResponseEntity.ok(new CustomPage<>(invoices));
     }
 }

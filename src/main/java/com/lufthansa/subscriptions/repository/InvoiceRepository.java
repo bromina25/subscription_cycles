@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-
 @Repository
 public interface InvoiceRepository extends BaseRepository<Invoice> {
 
@@ -24,9 +22,6 @@ public interface InvoiceRepository extends BaseRepository<Invoice> {
                 SELECT i FROM Invoice i
                 WHERE (:customerId IS NULL OR i.subscription.customer.id = :customerId)
                   AND (:status IS NULL OR i.invoiceStatus = :status)
-                  AND (:dateFrom IS NULL OR i.periodStart >= :dateFrom)
-                  AND (:dateTo IS NULL OR i.periodEnd <= :dateTo)
             """)
-    Page<Invoice> findInvoices(@Param("customerId") Long customerId, @Param("status") InvoiceStatus status, @Param("dateFrom") LocalDate dateFrom,
-                               @Param("dateTo") LocalDate dateTo, Pageable pageable);
+    Page<Invoice> findInvoices(@Param("customerId") Long customerId, @Param("status") InvoiceStatus status, Pageable pageable);
 }
